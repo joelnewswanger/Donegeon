@@ -1,29 +1,12 @@
 from random import randint
 
 
-class Weapon(object):
-    def __init__(self, iname, high, low):
+class Spell(object):
+    def __init__(self, iname, element, stance, range):
         self.name = iname
-        self.high = high
-        self.low = low
-
-
-class Armor(object):
-    def __init__(self, iname, defence):
-        self.name = iname
-        self.defence = defence
-
-
-class Sheild(object):
-    def __init__(self, iname, defence):
-        self.name = iname
-        self.defence = defence
-
-
-class Food(object):
-    def __init__(self, iname, nourish):
-        self.name = iname
-        self.nourish = nourish
+        self.element = element
+        self.stance = stance
+        self.range = range
 
 
 adjective_list = (
@@ -343,7 +326,6 @@ def create_thing(thing_name, thing):
             new_name = adjective_list[randint(0, 999)] + ' ' + new_name
             if power[1] > 150:
                 new_name = adjective_list[randint(0, 999)] + ' ' + new_name
-        new_name = Weapon(new_name, power[1], power[0])
         weapons[new_name] = power                                           # dictionary
         print('The ' + new_name.name + ' ' + str(power[1]) + '-' + str(power[0]) + " is a " + thing + ".")
     elif thing == 'armor':
@@ -351,7 +333,6 @@ def create_thing(thing_name, thing):
             new_name = adjective_list[randint(0, 999)] + ' ' + new_name
             if defence > 40:
                 new_name = adjective_list[randint(0, 999)] + ' ' + new_name
-        new_name = Armor(new_name, defence)
         armors[new_name] = defence
         print('The ' + new_name.name + ' (' + str(defence) + ') is ' + thing + '.')
     elif thing == 'sheild':
@@ -359,7 +340,6 @@ def create_thing(thing_name, thing):
             new_name = adjective_list[randint(0, 999)] + ' ' + new_name
             if defence > 40:
                 new_name = adjective_list[randint(0, 999)] + ' ' + new_name
-        new_name = Sheild(new_name, defence)
         shields[new_name] = defence
         print('The ' + new_name.name + ' (' + str(defence) + ') is a ' + thing + '.')
     elif thing == 'food':
@@ -367,7 +347,6 @@ def create_thing(thing_name, thing):
             new_name = adjective_list[randint(0, 999)] + ' ' + new_name
             if meal > 40:
                 new_name = adjective_list[randint(0, 999)] + ' ' + new_name
-        new_name = Food(new_name, meal)
         foods[new_name] = meal
         print('The ' + new_name.name + ' (' + str(meal) + ') is ' + thing + '.')
     elif thing == 'monster':
