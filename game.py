@@ -9,6 +9,56 @@ class Spell(object):
         self.range = range
 
 
+fireball = Spell('fireball', 'fire', 'offensive', 'longrange')  # mele > long > short
+flamewall = Spell('flamewall', 'fire', 'defensive', 'longrange')
+dragonbreath = Spell('dragonbreath', 'fire', 'trickster', 'longrange')
+flamesword = Spell('flamesword', 'fire', 'offensive', 'mele')
+flamesheild = Spell('flamesheild', 'fire', 'defensive', 'mele')
+flamedaggers = Spell('flamedaggers', 'fire', 'trickster', 'mele')
+flame = Spell('flame', 'fire', 'offensive', 'shortrange')
+lava = Spell('lava', 'fire', 'defensive', 'shortrange')
+embers = Spell('embers', 'fire', 'trickster')
+
+rockfall = Spell('rockfall', 'earth', 'offensive', 'longrange')
+rockwall = Spell('rockwall', 'earth', 'defensive', 'longrange')
+tunnel = Spell("tunnel", 'earth', 'trickster', 'longrange')
+stonefists = Spell('stonefists', 'earth', 'offensive' , 'mele')
+stonearmor = Spell('stonearmor', 'earth', 'defensive', 'mele')
+diamonddaggers = Spell('diamonddaggers', 'earth', 'trickster', 'mele')
+sandblast = Spell('sandblast', 'earth', 'offensive', 'shortrange')
+mud = Spell('mud', 'earth', 'defensive', 'shortrange')
+gravels = Spell('gravels', 'earth', 'trickster', 'shortrange')
+
+spike = Spell('spike', 'metal', 'offensive', 'longrange')
+steelwall = Spell('steelwall', 'metal', 'defensive', 'longrange')
+chains = Spell('chains', 'metal', 'trickster', 'longrange')
+ironblade = Spell('ironblade', 'metal', 'offensive', 'mele')
+goldensheild = Spell('goldensheild', 'metal', 'defensive', 'mele')
+invisibledaggers = Spell('invisibledaggers', 'metal', 'trickster', 'mele')
+silverspear = Spell('silverspear', 'metal', 'offensive', 'shortrange')
+caltrops = Spell('caltrops', 'metal', 'defensive', 'shortrange')
+alchemy = Spell('alchemy', 'metal', 'trickster', 'shortrange')
+
+geyser = Spell('geyser', 'water', 'offensive', 'longrange')
+icewall = Spell('icewall', 'water', 'defensive', 'longrange')
+rain = Spell('rain', 'water', 'trickster', 'longrange')
+waterwhip = Spell('waterwhip', 'water', 'offensive', 'mele')
+icearmor = Spell('icearmor', 'water', 'defensive', 'mele')
+icicle = Spell('icicle', 'water', 'trickster', 'mele')
+waterjet = Spell('waterjet', 'water', 'offensive', 'shortrange')
+wave = Spell('wave', 'water', 'defensive', 'shortrange')
+mist = Spell('mist', 'water', 'trickster', 'shortrange')
+
+pinetree = Spell('pinetree', 'wood', 'offensive', 'longrange')
+
+
+
+
+
+
+
+
+
 adjective_list = (
     "modern", "truthful", "chunky", "best", "breezy", "guarded", "abusive", "idiotic", "wretched", "abject", "ugly",
     "spiritual", "kindhearted", "iron", "joyous", "ruthless", "scared", "lamentable", "closed", "well-to-do",
