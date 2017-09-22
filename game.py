@@ -1,64 +1,6 @@
 from random import randint
 
 
-class Spell(object):
-    def __init__(self, iname, element, stance, range):
-        self.name = iname
-        self.element = element
-        self.stance = stance
-        self.range = range
-
-
-fireball = Spell('fireball', 'fire', 'offensive', 'longrange')  # mele > long > short
-flamewall = Spell('flamewall', 'fire', 'defensive', 'longrange')
-dragonbreath = Spell('dragonbreath', 'fire', 'trickster', 'longrange')
-flamesword = Spell('flamesword', 'fire', 'offensive', 'mele')
-flamesheild = Spell('flamesheild', 'fire', 'defensive', 'mele')
-flamedaggers = Spell('flamedaggers', 'fire', 'trickster', 'mele')
-flame = Spell('flame', 'fire', 'offensive', 'shortrange')
-lava = Spell('lava', 'fire', 'defensive', 'shortrange')
-embers = Spell('embers', 'fire', 'trickster')
-
-rockfall = Spell('rockfall', 'earth', 'offensive', 'longrange')
-rockwall = Spell('rockwall', 'earth', 'defensive', 'longrange')
-tunnel = Spell("tunnel", 'earth', 'trickster', 'longrange')
-stonefists = Spell('stonefists', 'earth', 'offensive' , 'mele')
-stonearmor = Spell('stonearmor', 'earth', 'defensive', 'mele')
-diamonddaggers = Spell('diamonddaggers', 'earth', 'trickster', 'mele')
-sandblast = Spell('sandblast', 'earth', 'offensive', 'shortrange')
-mud = Spell('mud', 'earth', 'defensive', 'shortrange')
-gravels = Spell('gravels', 'earth', 'trickster', 'shortrange')
-
-spike = Spell('spike', 'metal', 'offensive', 'longrange')
-steelwall = Spell('steelwall', 'metal', 'defensive', 'longrange')
-chains = Spell('chains', 'metal', 'trickster', 'longrange')
-ironblade = Spell('ironblade', 'metal', 'offensive', 'mele')
-goldensheild = Spell('goldensheild', 'metal', 'defensive', 'mele')
-invisibledaggers = Spell('invisibledaggers', 'metal', 'trickster', 'mele')
-silverspear = Spell('silverspear', 'metal', 'offensive', 'shortrange')
-caltrops = Spell('caltrops', 'metal', 'defensive', 'shortrange')
-alchemy = Spell('alchemy', 'metal', 'trickster', 'shortrange')
-
-geyser = Spell('geyser', 'water', 'offensive', 'longrange')
-icewall = Spell('icewall', 'water', 'defensive', 'longrange')
-rain = Spell('rain', 'water', 'trickster', 'longrange')
-waterwhip = Spell('waterwhip', 'water', 'offensive', 'mele')
-icearmor = Spell('icearmor', 'water', 'defensive', 'mele')
-icicle = Spell('icicle', 'water', 'trickster', 'mele')
-waterjet = Spell('waterjet', 'water', 'offensive', 'shortrange')
-wave = Spell('wave', 'water', 'defensive', 'shortrange')
-mist = Spell('mist', 'water', 'trickster', 'shortrange')
-
-pinetree = Spell('pinetree', 'wood', 'offensive', 'longrange')
-
-
-
-
-
-
-
-
-
 adjective_list = (
     "modern", "truthful", "chunky", "best", "breezy", "guarded", "abusive", "idiotic", "wretched", "abject", "ugly",
     "spiritual", "kindhearted", "iron", "joyous", "ruthless", "scared", "lamentable", "closed", "well-to-do",
@@ -183,8 +125,7 @@ adjective_list = (
     "colorful", "spectacular", "volatile", "blue", "fair", "lewd", "overt", "astonishing", "bawdy", "waiting",
     "disagreeable", "secret", "imaginary", "material", "obnoxious", "alike", "pink", "alcoholic", "wiry", "taboo",
     "pathetic", "mundane", "rude", "spooky", "apathetic", "craven", "unruly", "plain", "thoughtful", "squalid",
-    "eminent",
-    "literate", "present", "hateful"
+    "eminent", "literate", "present", "hateful"
 )
 item_type_list = {0: 'weapon', 1: 'armor', 2: 'sheild', 3: 'food', 4: 'monster', 5: 'monster'}
 weapon = {'name': 'basic sword', 'high': 50, 'low': 10}
@@ -384,21 +325,21 @@ def create_thing(thing_name, thing):
             if defence > 40:
                 new_name = adjective_list[randint(0, 999)] + ' ' + new_name
         armors[new_name] = defence
-        print('The ' + new_name.name + ' (' + str(defence) + ') is ' + thing + '.')
+        print('The ' + new_name + ' (' + str(defence) + ') is ' + thing + '.')
     elif thing == 'sheild':
         if defence > 20:
             new_name = adjective_list[randint(0, 999)] + ' ' + new_name
             if defence > 40:
                 new_name = adjective_list[randint(0, 999)] + ' ' + new_name
         shields[new_name] = defence
-        print('The ' + new_name.name + ' (' + str(defence) + ') is a ' + thing + '.')
+        print('The ' + new_name + ' (' + str(defence) + ') is a ' + thing + '.')
     elif thing == 'food':
         if meal > 20:
             new_name = adjective_list[randint(0, 999)] + ' ' + new_name
             if meal > 40:
                 new_name = adjective_list[randint(0, 999)] + ' ' + new_name
         foods[new_name] = meal
-        print('The ' + new_name.name + ' (' + str(meal) + ') is ' + thing + '.')
+        print('The ' + new_name + ' (' + str(meal) + ') is ' + thing + '.')
     elif thing == 'monster':
         level = attack + attack2 + defence + meal
         if level > 100:
