@@ -127,7 +127,7 @@ adjective_list = (
     "pathetic", "mundane", "rude", "spooky", "apathetic", "craven", "unruly", "plain", "thoughtful", "squalid",
     "eminent", "literate", "present", "hateful"
 )
-item_type_list = {0: 'weapon', 1: 'armor', 2: 'sheild', 3: 'food', 4: 'monster', 5: 'monster'}
+item_type_list = {0: 'weapon', 1: 'armor', 2: 'shield', 3: 'food', 4: 'monster', 5: 'monster'}
 weapon = {'name': 'basic sword', 'high': 50, 'low': 10}
 armor = {'name': 'shirt', 'defence': 10}
 shield = {'name': 'no shield', 'defence': 0}
@@ -140,6 +140,8 @@ armors = {}
 shields = {}
 foods = {}
 inventory = [weapons, armors, shields, foods]
+
+
 name = input("What is your name?: ") + " the " + adjective_list[randint(0, 999)]
 print("Welcome to Donegeon, " + name + "!")
 print("It's dangerous to go alone! Take this basic sword (50-10).")
@@ -160,7 +162,7 @@ def status():
     print('You are wearing a', armor['name'], armor['defence'], ' and ', shield['name'], shield['defence'])
 
 
-def death():
+def death():  # In event you are defeated in battle, checks for food in backpack, else game over and terminates loop.
     totfood = 0
     for key in foods:
         totfood += foods[key]
@@ -175,7 +177,7 @@ def death():
         print('Game Over.')
 
 
-def home():
+def home():  # Home menu.
     global health
     global amulet
     print('Options (shortcuts):')
@@ -225,7 +227,7 @@ def home():
             home()
 
 
-def event():
+def event():  # Chooses and presents an encounter scenario to present and what it contains e.g. monster, shield, food.
     what = randint(0, 6)
     open_it = 'n'
     if what == 0 or what == 4:
@@ -243,7 +245,7 @@ def event():
     return [what, open_it]
 
 
-def fight(monname, monpower, mondefense, monhealth, defence, level):
+def fight(monname, monpower, mondefense, monhealth, defence, level):  # If content is monster, offers battle.
     global health
     global fame
     cont = input('Are you prepared to fight the ' + monname + '? y/n: ')
@@ -304,7 +306,7 @@ def fight(monname, monpower, mondefense, monhealth, defence, level):
                 return False
 
 
-def create_thing(thing_name, thing):
+def create_thing(thing_name, thing):  # Assigns names and stats to item or monster
     new_name = adjective_list[randint(0, 999)] + ' ' + thing_name
     attack = randint(1, 100)
     attack2 = randint(1, 100)
@@ -317,7 +319,7 @@ def create_thing(thing_name, thing):
             new_name = adjective_list[randint(0, 999)] + ' ' + new_name
             if power[1] > 150:
                 new_name = adjective_list[randint(0, 999)] + ' ' + new_name
-        weapons[new_name] = power                                           # dictionary
+        weapons[new_name] = power
         print('The ' + new_name.name + ' ' + str(power[1]) + '-' + str(power[0]) + " is a " + thing + ".")
     elif thing == 'armor':
         if defence > 20:
@@ -326,7 +328,7 @@ def create_thing(thing_name, thing):
                 new_name = adjective_list[randint(0, 999)] + ' ' + new_name
         armors[new_name] = defence
         print('The ' + new_name + ' (' + str(defence) + ') is ' + thing + '.')
-    elif thing == 'sheild':
+    elif thing == 'shield':
         if defence > 20:
             new_name = adjective_list[randint(0, 999)] + ' ' + new_name
             if defence > 40:
@@ -354,11 +356,11 @@ def create_thing(thing_name, thing):
             return False
 
 
-def meeting(who):
+def meeting(who):  # Meeting with wizard. (in development)
     global name
     if fame < 1000:
         print('Greetings stranger. You must be new to these parts, I have not heard tell of your adventures.')
-        print('I am here to teach great heros the ancient magic.')
+        print('I am here to teach great heroes the ancient magic.')
         print('That way when they emerge from Donegeon, I can take partial credit for all their great deeds! HEHEHE!')
         print('The mysterious stranger has disappeared...')
         home()
@@ -375,7 +377,7 @@ def meeting(who):
     # elif who == 3056518:
 
 
-def inside(opening):
+def inside(opening):  # collects input for name of content.
     if opening[1] == 'y':
         if amulet == 'natural':
             item_type = randint(0, 5)
@@ -385,7 +387,7 @@ def inside(opening):
             item_type = 0
         elif amulet == 'armor':
             item_type = 1
-        elif amulet == 'sheild':
+        elif amulet == 'shield':
             item_type = 2
         elif amulet == 'food':
             item_type = 3
