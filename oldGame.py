@@ -104,7 +104,7 @@ adjective_list = (
     "unaccountable", "neighborly", "long-term", "noiseless", "loving", "defiant", "phobic", "talented", "unequaled",
     "glossy", "pretty", "fabulous", "draconian", "hard-to-find", "guiltless", "cut", "dramatic", "ossified", "orange",
     "cuddly", "dear", "powerful", "testy", "dangerous", "wicked", "sophisticated", "odd", "encouraging", "windy",
-    "delicious", "ambiguous", "ad", "hoc", "nappy", "next", "black", "drunk", "brawny", "offbeat", "dusty",
+    "delicious", "ambiguous", "ad hoc", "nappy", "next", "black", "drunk", "brawny", "offbeat", "dusty",
     "protective",
     "abrupt", "gamy", "melodic", "subdued", "daily", "deep", "cloistered", "extra-large", "super", "noxious", "quirky",
     "military", "hollow", "wanting", "historical", "teeny", "zealous", "hypnotic", "beneficial", "stiff", "yellow",
@@ -123,7 +123,7 @@ adjective_list = (
     "determined",
     "tiresome", "heady", "friendly", "tenuous", "puffy", "open", "brown", "long", "excited", "responsible", "devilish",
     "colorful", "spectacular", "volatile", "blue", "fair", "lewd", "overt", "astonishing", "bawdy", "waiting",
-    "disagreeable", "secret", "imaginary", "material", "obnoxious", "alike", "pink", "alcoholic", "wiry", "taboo",
+    "disagreeable", "secret", "imaginary", "material", "obnoxious", "pink", "alcoholic", "wiry", "taboo",
     "pathetic", "mundane", "rude", "spooky", "apathetic", "craven", "unruly", "plain", "thoughtful", "squalid",
     "eminent", "literate", "present", "hateful"
 )
@@ -144,7 +144,7 @@ inventory = [weapons, armors, shields, foods]
 
 name = input("What is your name?: ") + " the " + adjective_list[randint(0, 999)]
 print("Welcome to Donegeon, " + name + "!")
-print("It's dangerous to go alone! Take this basic sword (50-10).")
+print("It's dangerous to go alone! Take this basic sword (10-50).")
 print("Entering the Donegeon!")
 
 
@@ -156,10 +156,10 @@ def chkinv():
 
 
 def status():
-    print('You have', 'hitpoints', health, '.')
+    print('You have', health, ' hitpoints.')
     print('The name ', name, 'has approximately ', fame, ' fame on the Bendrojh-Fimblston scale.')  # add inflection
     print('You are wielding a', weapon['name'], weapon['high'], weapon['low'])
-    print('You are wearing a', armor['name'], armor['defence'], ' and ', shield['name'], shield['defence'])
+    print('You are wearing a', armor['name'], armor['defence'], ' and defending yourself with a', shield['name'], shield['defence'])
 
 
 def death():  # In event you are defeated in battle, checks for food in backpack, else game over and terminates loop.
@@ -172,7 +172,7 @@ def death():  # In event you are defeated in battle, checks for food in backpack
     else:
         global dead
         dead = True
-        print('You died weilding', weapon['name'], ', wearing ', armor['name'], ', and ', shield['name'], '. ')
+        print('You died weilding', weapon['name'], ', wearing a ', armor['name'], ', and ', shield['name'], '. ')
         print('The name of ', name, ' had ', fame, ' fame on the Bendrojh-Fimblston scale.')
         print('Game Over.')
 
@@ -189,26 +189,33 @@ def home():  # Home menu.
         chkinv()
         home()
     if action == 'equip' or action == 'eq':
-        what = input('What do you want to equip?: ')
+        what = input("What do you want to equip? (Or say 'best'): ")
         if what in weapons:
             weapon['name'] = what
             weapon['high'] = weapons[what][1]
             weapon['low'] = weapons[what][0]
-            print('You have equiped the ', weapon['name'], ' ', weapon['high'], '-', weapon['low'])  # as a weapon
+            print('You have equipped the ', weapon['name'], ' ', weapon['low'], '-', weapon['high'])  # as a weapon
         elif what in armors:
             armor['name'] = what
             armor['defence'] = armors[what]
-            print('You have equiped the ', armor['name'], armor['defence'])
+            print('You have equipped the ', armor['name'], armor['defence'])
         elif what in shields:
             shield['name'] = what
             shield['defence'] = shields[what]
-            print('You have equiped the ', shield['name'], shield['defence'])
+            print('You have equipped the ', shield['name'], shield['defence'])
         else:
             print('Can not find ', what)
         home()
     if action == 'eat':
-        what = input('What do you want to eat?: ')
-        if what in foods:
+        what = input("What do you want to eat? (Or say 'all'): ")
+        if what == "all":
+            totfood = 0
+            for key in foods:
+                totfood += foods[key]
+            print(f"You eat all the food you have. You regain {totfood} health")
+            health = health + totfood
+            foods.clear()
+        elif what in foods:
             health = health + foods[what]
             print('You eat the ', what, 'and regain ', foods[what], 'health.')
             foods.pop(what)
@@ -248,7 +255,7 @@ def event():  # Chooses and presents an encounter scenario to present and what i
 def fight(monname, monpower, mondefense, monhealth, defence, level):  # If content is monster, offers battle.
     global health
     global fame
-    cont = input('Are you prepared to fight the ' + monname + '? y/n: ')
+    cont = input('Are you prepared to fight the ' + monname + '? y/n/s: ')
     if cont == 'status' or cont == 's':
         status()
         if fight(monname, monpower, mondefense, monhealth, defence, level):
@@ -320,7 +327,7 @@ def create_thing(thing_name, thing):  # Assigns names and stats to item or monst
             if power[1] > 150:
                 new_name = adjective_list[randint(0, 999)] + ' ' + new_name
         weapons[new_name] = power
-        print('The ' + new_name.name + ' ' + str(power[1]) + '-' + str(power[0]) + " is a " + thing + ".")
+        print('The ' + new_name + ' ' + str(power[0]) + '-' + str(power[1]) + " is a " + thing + ".")
     elif thing == 'armor':
         if defence > 20:
             new_name = adjective_list[randint(0, 999)] + ' ' + new_name
@@ -343,14 +350,17 @@ def create_thing(thing_name, thing):  # Assigns names and stats to item or monst
         foods[new_name] = meal
         print('The ' + new_name + ' (' + str(meal) + ') is ' + thing + '.')
     elif thing == 'monster':
-        level = attack + attack2 + defence + meal
+        hp = meal
+        level = attack + attack2 + defence + hp
         if level > 100:
             new_name = adjective_list[randint(0, 999)] + ' ' + new_name
+            hp = meal * 2
             if level > 200:
                 new_name = adjective_list[randint(0, 999)] + ' ' + new_name
+                hp = meal * 4
         print('The ', new_name, ' is a monster with attack (', attack, '-', power[1], '), defence (', defence,
-              '), and health (', meal, ').')
-        if not fight(new_name, power, defence, meal, mydef, level):
+              '), and health (', hp, ').')
+        if not fight(new_name, power, defence, hp, mydef, level):
             return True
         else:
             return False
@@ -358,24 +368,39 @@ def create_thing(thing_name, thing):  # Assigns names and stats to item or monst
 
 def meeting(who):  # Meeting with wizard. (in development)
     global name
-    if fame < 1000:
-        print('Greetings stranger. You must be new to these parts, I have not heard tell of your adventures.')
-        print('I am here to teach great heroes the ancient magic.')
-        print('That way when they emerge from Donegeon, I can take partial credit for all their great deeds! HEHEHE!')
-        print('The mysterious stranger has disappeared...')
-        home()
-    elif fame >= 1000:
-        print('Greetings ', name, '! I have heard of your great heroism in Donegeon!')
-        print('I can mentor you in the ways of ancient magic, so that nothing may stand in your way!')
-        responce = input('lesson(l)')
-        if responce == 'lesson' or responce == 'l':
-            print('stuff', who)
-    # if who == 3056516:
-
+    if who == 3056516 or who == 3056517:
+        if fame < 1000:
+            print('Greetings stranger. You must be new to these parts, I have not heard tell of your adventures.')
+            print('I am here to teach great heroes the ancient magic.')
+            print('That way when they emerge from Donegeon, I can take partial credit for all their great deeds! HEHEHE!')
+            print('The mysterious stranger has disappeared...')
+            home()
+        elif fame >= 1000:
+            print('Greetings ', name, '! I have heard of your great heroism in Donegeon!')
+            print('I can mentor you in the ways of ancient magic, so that nothing may stand in your way!')
+            response = input('lesson(l)')
+            if response == 'lesson' or response == 'l':
+                print('stuff', who)
     # elif who == 3056517:
-        # mission
-    # elif who == 3056518:
-
+    elif who == 3056518:
+        print("I need your help adventurer! There is a powerful monster blocking my path.")
+        ready = input("Can you defeat it? y/n: ")
+        if ready == "y":
+            print("You follow the path to where the man directed you.")
+            boss = input("What could that be?: ")
+            boss = "epicly " + adjective_list[randint(0, 999)] + ' ' + boss
+            lucky = randint(0, 30)
+            bosspower = [90-lucky, 130+lucky]
+            mydef = armor['defence'] + shield['defence']
+            print('The ', boss, ' is a boss monster with attack (', bosspower[0], '-', bosspower[1], '), defence (90), and health (250).')
+            if fight(boss, bosspower, 90, 250, mydef, 500):
+                print("The man thanks you for your heroism and hurries away.")
+                home()
+            else:
+                death()
+        else:
+            print("I don't blame you, kid. I turned and ran myself!")
+            home()
 
 def inside(opening):  # collects input for name of content.
     if opening[1] == 'y':
