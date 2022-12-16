@@ -8,7 +8,7 @@ print("By Joel Newswanger")
 
 def event():
     what = randint(0, 6)
-    inside = randint(0, 5)
+    inside = randint(0, 4)
     if what == 3:
         open_it = input("An " + randomAdj() +
                    ' human is sitting in the middle of the room. Greet them? y/n: ')
@@ -37,20 +37,25 @@ def event():
         else:
             if inside == 0:
                 new_item = Weapon(iname)
+                player.weapons.append(new_item)
                 print('The', new_item.name, new_item.power[0], new_item.power[1], "is a weapon.")
             elif inside == 1:
                 new_item = Armor(iname)
+                player.armors.append(new_item)
                 print('The', new_item.name, new_item.defence, "is armor.")
             elif inside == 2:
                 new_item = Shield(iname)
+                player.shields.append(new_item)
                 print('The', new_item.name, new_item.defence, "is a shield.")
             elif inside == 3:
                 new_item = Food(iname)
+                player.foods.append(new_item)
                 print('The', new_item.name, new_item.hp, "is food.")
             elif inside == 4:
                 monster = Monster(iname)
                 print('The', monster.name, 'is a monster with attack (', monster.power, '), defence (', monster.defence,
                       '), and health (', monster.hp, ').')
+                monster.fight(player)
 
 
 while True:
@@ -65,13 +70,13 @@ while True:
             action = input('status (s), inventory (i), equip (eq), eat, or continue (c)? : ')
             if action == 'status' or action == 's':
                 player.status()
-            if action == 'inventory' or action == 'i':
+            elif action == 'inventory' or action == 'i':
                 player.chkinv()
-            if action == 'equip' or action == 'eq':
+            elif action == 'equip' or action == 'eq':
                 player.equip()
-            if action == 'eat':
+            elif action == 'eat':
                 player.eat()
-            if action == 'continue' or action == 'c':
+            elif action == 'continue' or action == 'c':
                 event()
             else:
                     print('Invalid entry.')
