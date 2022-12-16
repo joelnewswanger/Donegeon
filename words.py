@@ -7,4 +7,3 @@ def randomAdj():
     adjective_list = adjective_str.split(" ")
     adjcount = len(adjective_list)
     return(adjective_list[randint(0, adjcount-1)].strip("\n"))
-
