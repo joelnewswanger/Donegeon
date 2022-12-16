@@ -1,5 +1,5 @@
 from random import randint
-from objects import Player, Weapon, Armor, Shield, Food, Monster
+from objects import Player, Weapon, Armor, Shield, Food, Monster, Quest, Wizard
 from words import randomAdj
 
 print("Donegeon")
@@ -10,12 +10,16 @@ def event():
     what = randint(0, 6)
     inside = randint(0, 4)
     if what == 3:
-        open_it = input("An " + randomAdj() +
-                   ' human is sitting in the middle of the room. Greet them? y/n: ')
-        if open_it == 'y':
-            print("They are not ready.")
+        if randint(0, 2) == 0:
+            npc = Quest()
         else:
-            print("You avoid the man's friendly smile, and leave the room quickly.")
+            npc = Wizard()
+        open_it = input("A " + npc.title + npc.descriptor +
+                   ' is sitting in the middle of the room. Greet them? y/n: ')
+        if open_it == 'y':
+            npc.greet(player)
+        else:
+            print("You avoid the" + npc.descriptor + "'s friendly smile, and leave the room quickly.")
     else:
         if what == 0 or what == 4:
             open_it = input('Here is a chest! Open it? y/n: ')

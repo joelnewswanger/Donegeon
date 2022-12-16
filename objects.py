@@ -178,7 +178,8 @@ class Player:
             print('You will survive if you eat something.')
         else:
             self.dead = True
-            print('You died wielding', self.weapon.name, ', wearing a ', self.armor.name, ', and ', self.shield.name, '. ')
+            print('You died wielding', self.weapon.name, ', wearing a ', self.armor.name, ', and ', self.shield.name,
+                  '. ')
             print('The name of ', self.name, ' had ', self.fame, ' fame on the Bendrojh-Fimblston scale.')
             print('Game Over.')
 
@@ -190,7 +191,7 @@ class NPC:
     gender = 1
 
     def __init__(self):
-        descs = [[["girl"], ["young lady"], ["woman"], ["old woman"]], [["boy"], ["young lad"], ["man"], ["old man"]]]
+        descs = [["girl", "young lady", "woman", "old woman"], ["boy", "young lad", "man", "old man"]]
         self.title = randomAdj()
         self.gender = randint(0, 1)
         self.age = randint(0, 3)
@@ -201,7 +202,27 @@ class Quest(NPC):
     def __init__(self):
         super().__init__()
 
+    def greet(self, player):
+        print("'" + self.descriptor + "': I need your help adventurer! There is a powerful monster blocking my path.")
+        ready = input("Can you defeat it? y/n: ")
+        if ready == "y":
+            print("You follow the path to where the " + self.descriptor + " directed you.")
+            bossname = input("What could that be?: ")
+            boss = Monster("Boss")
+            boss.name = "epicly", randomAdj(), bossname
+            lucky = randint(0, 30)
+            boss.power = [90 - lucky, 130 + lucky]
+            boss.hp = 250
+            boss.defence = 90
+            boss.level = 500
+            print("The " + boss.name + " is a boss monster with attack (", boss.power, '), defence (', boss.defence,
+                  '), and health (', boss.hp, ').')
+            boss.fight(player)
+
 
 class Wizard(NPC):
     def __init__(self):
         super().__init__()
+
+    def greet(self, player):
+        print("The stranger ignores you.")
