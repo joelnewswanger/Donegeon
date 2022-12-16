@@ -183,3 +183,25 @@ class Player:
             print('Game Over.')
 
 
+class NPC:
+    descriptor = "man"
+    title = "old"
+    age = 3
+    gender = 1
+
+    def __init__(self):
+        descs = [[["girl"], ["young lady"], ["woman"], ["old woman"]], [["boy"], ["young lad"], ["man"], ["old man"]]]
+        self.title = randomAdj()
+        self.gender = randint(0, 1)
+        self.age = randint(0, 3)
+        self.descriptor = descs[self.gender][self.age]
+
+
+class Quest(NPC):
+    def __init__(self):
+        super().__init__()
+
+
+class Wizard(NPC):
+    def __init__(self):
+        super().__init__()
