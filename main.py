@@ -14,7 +14,7 @@ def event():
             npc = Quest()
         else:
             npc = Wizard()
-        open_it = input("A " + npc.title + npc.descriptor +
+        open_it = input("A " + npc.title + " " + npc.descriptor +
                    ' is sitting in the middle of the room. Greet them? y/n: ')
         if open_it == 'y':
             npc.greet(player)

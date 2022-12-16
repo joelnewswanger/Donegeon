@@ -147,7 +147,29 @@ class Player:
         found = False
         if equipment == "best":
             found = True
-            print("Not implemented")
+            spec = input("Choose: all, weapon, armor, shield: ")
+            if spec == "all" or spec == "weapon":
+                best = self.weapon
+                for w in self.weapons:
+                    if ((w.power[0] + w.power[1])/2) > ((best.power[0] + best.power[1])/2):
+                        best = w
+                self.weapon = best
+                print('You have equipped the', self.weapon.name, self.weapon.power[0], '-', self.weapon.power[1],
+                      "as a weapon.")
+            if spec == "all" or spec == "armor":
+                best = self.armor
+                for a in self.armors:
+                    if a.defence > best.defence:
+                        best = a
+                self.armor = best
+                print('You have equipped the', self.armor.name, self.armor.defence, "as armor.")
+            if spec == "all" or spec == "shield":
+                best = self.shield
+                for s in self.shields:
+                    if s.defence > best.defence:
+                        best = s
+                self.shield = best
+                print("You have equipped the", self.shield.name, self.shield.defence, "as shield.")
         for weapon in self.weapons:
             if weapon.name == equipment:
                 self.weapon = weapon
@@ -209,7 +231,7 @@ class Quest(NPC):
             print("You follow the path to where the " + self.descriptor + " directed you.")
             bossname = input("What could that be?: ")
             boss = Monster("Boss")
-            boss.name = "epicly", randomAdj(), bossname
+            boss.name = "epically" + " " + randomAdj() + " " + bossname
             lucky = randint(0, 30)
             boss.power = [90 - lucky, 130 + lucky]
             boss.hp = 250
