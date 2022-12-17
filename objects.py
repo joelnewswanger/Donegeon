@@ -17,6 +17,7 @@ class Item:
 
 
 class Weapon(Item):
+    itemtype = "weapon"
     def __init__(self, name_in):
         super().__init__(name_in)
         if ((self.power[0] + self.power[1]) / 2) > 50:
@@ -26,6 +27,7 @@ class Weapon(Item):
 
 
 class Armor(Item):
+    itemtype = "armor"
     def __init__(self, name_in):
         super().__init__(name_in)
         if self.defence > 20:
@@ -35,7 +37,7 @@ class Armor(Item):
 
 
 class Shield(Armor):
-    shield = True
+    itemtype = "shield"
 
 
 class Food(Item):
@@ -65,6 +67,7 @@ class Monster(Item):
         cont = input('Are you prepared to fight the ' + self.name + '? y/n/s: ')
         if cont == "s" or cont == "status":
             player.status()
+            self.fight(player)
         elif cont == "y":
             while not player.dead and not self.dead:
                 playerDmg = randint(player.weapon.power[0], player.weapon.power[1]) - self.defence
@@ -83,9 +86,12 @@ class Monster(Item):
                     player.fame = player.fame + self.level
                     print("Your heroic deed gained you", self.level, "fame. The name of", player.name, "is now at",
                           player.fame, "on the Bendrojh-Fimblston scale!")
+                    return True
                 if player.health < 1:
                     print("The", self.name, "has defeated you.")
                     player.death()
+        else:
+            print("You got away this time...")
 
 
 class Player:
@@ -96,6 +102,7 @@ class Player:
     amulet = 'natural'
     health = 200
     dead = False
+    wizard = False
     fame = 0
     weapons = []
     armors = []
@@ -111,7 +118,6 @@ class Player:
         self.armor.name = "shirt"
         self.shield.name = "no shield"
         self.shield.defence = 0
-        self.weapons.append(self.weapon)
 
     def status(self):
         print('You have', self.health, 'hitpoints.')
@@ -142,6 +148,19 @@ class Player:
         list_foods = list_foods[:-2] + "."
         print('foods: ', list_foods)
 
+    def haveitem(self, name):
+        for weapon in self.weapons:
+            if weapon.name == name:
+                return weapon
+        for armor in self.armors:
+            if armor.name == name:
+                return armor
+        for shield in self.shields:
+            if shield.name == name:
+                return shield
+        print("Could not find " + name)
+        return False
+
     def equip(self):
         equipment = input("What would you like to equip? (Or say 'best'): ")
         found = False
@@ -170,24 +189,20 @@ class Player:
                         best = s
                 self.shield = best
                 print("You have equipped the", self.shield.name, self.shield.defence, "as shield.")
-        for weapon in self.weapons:
-            if weapon.name == equipment:
-                self.weapon = weapon
-                found = True
-                print('You have equipped the', self.weapon.name, self.weapon.power[0], '-', self.weapon.power[1],
-                      "as a weapon.")
-        for armor in self.armors:
-            if armor.name == equipment:
-                self.armor = armor
-                found = True
-                print('You have equipped the', self.armor.name, self.armor.defence, "as armor.")
-        for shield in self.shields:
-            if shield.name == equipment:
-                self.shield = shield
-                found = True
-                print("You have equipped the", self.shield.name, self.shield.defence, "as shield.")
-        if not found:
-            print("Could not find", equipment, ".")
+        else:
+            item = self.haveitem(equipment)
+            if not item:
+                return False
+            if item.itemtype == "weapon":
+                self.weapon = item
+            elif item.itemtype == "armor":
+                self.armor = item
+            elif item.itemtype == "shield":
+                self.shield = item
+            print("You equip the " + item.name + " as your " + item.itemtype + ".")
+
+    def magic(self):
+        print("not implemented")
 
     def eat(self):
         print("not implemented")
@@ -195,7 +210,7 @@ class Player:
     def death(self):  # In event you are defeated in battle, checks for food in backpack, else game over
         totfood = 0
         for key in self.foods:
-            totfood += self.foods[key].hp
+            totfood += key.hp
         if 0 - totfood < self.health:
             print('You will survive if you eat something.')
         else:
@@ -239,7 +254,8 @@ class Quest(NPC):
             boss.level = 500
             print("The " + boss.name + " is a boss monster with attack (", boss.power, '), defence (', boss.defence,
                   '), and health (', boss.hp, ').')
-            boss.fight(player)
+            if boss.fight(player):
+                print("The " + self.descriptor + " thanks you for your heroism and hurries away.")
 
 
 class Wizard(NPC):
@@ -247,4 +263,22 @@ class Wizard(NPC):
         super().__init__()
 
     def greet(self, player):
-        print("The stranger ignores you.")
+        if player.fame < 500:
+            print('Greetings stranger. You must be new to these parts, I have not heard tell of your adventures.')
+            print('I am here to teach great heroes the ancient magic.')
+            print("That way when they emerge from Donegeon, I can take partial credit for all their great deeds! HEHEHE!")
+            print('The mysterious stranger has disappeared...')
+        else:
+            print("'Greetings ", player.name, "! I have heard of your great heroism in Donegeon!'")
+            print("'I can mentor you in the ways of ancient magic, so that nothing may stand in your way!'")
+            response = input('Begin lesson? (y/n): ')
+            if response == "y":
+                print("'As you may have noticed, Donegeon contains some unusual things.'")
+                print("'This is because of a deep " + randomAdj() + " magic that was spilled here.'")
+                attention = input("The " + self.descriptor + " describes the nature of the magic at length. Pay attention? (y/n): ")
+                print("'...in the same way the magic naturally imbues items, we can manipulate it to create spells.'")
+                print("'First extract the essence from an item that has been imbued in the Donegeon. Like this.'")
+                focus = input("'Now I will teach you to create a spell.' Focus? y/n: ")
+                print("The essence becomes a " + randomAdj() + " fireball, which explodes against the far wall.")
+                print("You're pretty sure you figured out how it was done.")
+                player.wizard = True

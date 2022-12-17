@@ -71,13 +71,18 @@ while True:
         print("It's dangerous to go alone! Take this basic sword (10-50).")
         print("Entering the Donegeon!")
         while not player.dead:
-            action = input('status (s), inventory (i), equip (eq), eat, or continue (c)? : ')
+            action = input('status (s), inventory (i), equip (eq), magic (m), eat, or continue (c)? : ')
             if action == 'status' or action == 's':
                 player.status()
             elif action == 'inventory' or action == 'i':
                 player.chkinv()
             elif action == 'equip' or action == 'eq':
                 player.equip()
+            elif action == 'magic' or action == 'm':
+                if not player.wizard:
+                    print("You're pretty sure you can't do magic.")
+                elif player.wizard:
+                    player.magic()
             elif action == 'eat':
                 player.eat()
             elif action == 'continue' or action == 'c':
