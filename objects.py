@@ -158,6 +158,9 @@ class Player:
         for shield in self.shields:
             if shield.name == name:
                 return shield
+        for food in self.foods:
+            if food.name == name:
+                return food
         print("Could not find " + name)
         return False
 
@@ -199,13 +202,29 @@ class Player:
                 self.armor = item
             elif item.itemtype == "shield":
                 self.shield = item
+            else:
+                print("You can't wear that.")
             print("You equip the " + item.name + " as your " + item.itemtype + ".")
 
     def magic(self):
         print("not implemented")
 
     def eat(self):
-        print("not implemented")
+        target = input("What do you want to eat? Or say 'all'. : ")
+        if target == 'all':
+            sumhp = 0
+            for food in self.foods:
+                sumhp = sumhp + food.hp
+                self.foods.pop(food)
+            self.health = self.health + sumhp
+        else:
+            food = self.haveitem(target)
+            if not food:
+                return False
+            else:
+                self.health = self.health + food.hp
+                self.foods.pop(food)
+                print("You eat the " + food.name + " and regain " + food.hp + " health.")
 
     def death(self):  # In event you are defeated in battle, checks for food in backpack, else game over
         totfood = 0
