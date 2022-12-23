@@ -33,16 +33,16 @@ def event():
             open_it = 'y'
             print("Some rocks fall down behind you, you're trapped!")
             iname = input("Something lands on the ground in front of you! What is it?: ")
-        if open_it != "y":
+        if open_it == "n":
             if what == 0 or what == 4:
                 print("You pass by the chest. There may be something dangerous in there, after all.")
             elif what == 1 or what == 5:
                 print("You leave the door closed. A monster may have lurked behind it.")
-        else:
+        elif open_it == "y":
             if inside == 0:
                 new_item = Weapon(iname)
                 player.weapons.append(new_item)
-                print('The', new_item.name, new_item.power[0], new_item.power[1], "is a weapon.")
+                print('The', new_item.name, new_item.power0, new_item.power1, "is a weapon.")
             elif inside == 1:
                 new_item = Armor(iname)
                 player.armors.append(new_item)
@@ -57,9 +57,11 @@ def event():
                 print('The', new_item.name, new_item.hp, "is food.")
             elif inside == 4:
                 monster = Monster(iname)
-                print('The', monster.name, 'is a monster with attack (', monster.power, '), defence (', monster.defence,
-                      '), and health (', monster.hp, ').')
+                print('The', monster.name, 'is a monster with attack (', monster.power0, ",", monster.power1, '),'
+                      ' defence (', monster.defence, '), and health (', monster.hp, ').')
                 monster.fight(player)
+        else:
+            print("You got confused and ran away.")
 
 
 while True:

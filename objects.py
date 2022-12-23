@@ -4,13 +4,14 @@ from words import randomAdj
 
 class Item:
     name = ""
-    power = [0, 0]
+    power0 = 0
+    power1 = 1
     defence = 0
     hp = 0
 
     def __init__(self, name_in):
-        self.power[0] = randint(1, 100)
-        self.power[1] = self.power[0] + randint(1, 100)
+        self.power0 = randint(1, 100)
+        self.power1 = self.power0 + randint(1, 100)
         self.defence = randint(1, 60)
         self.hp = randint(10, 60)
         self.name = randomAdj() + " " + name_in
@@ -20,9 +21,9 @@ class Weapon(Item):
     itemtype = "weapon"
     def __init__(self, name_in):
         super().__init__(name_in)
-        if ((self.power[0] + self.power[1]) / 2) > 50:
+        if ((self.power0 + self.power1) / 2) > 50:
             self.name = randomAdj() + " " + self.name
-            if ((self.power[0] + self.power[1]) / 2) > 100:
+            if ((self.power0 + self.power1) / 2) > 100:
                 self.name = randomAdj() + " " + self.name
 
 
@@ -55,7 +56,7 @@ class Monster(Item):
 
     def __init__(self, name_in):
         super().__init__(name_in)
-        self.level = ((self.power[0] + self.power[1]) / 2) + self.defence + self.hp
+        self.level = ((self.power0 + self.power1) / 2) + self.defence + self.hp
         if self.level > 100:
             self.name = randomAdj() + " " + self.name
             self.hp = self.hp * 2
@@ -69,29 +70,46 @@ class Monster(Item):
             player.status()
             self.fight(player)
         elif cont == "y":
-            while not player.dead and not self.dead:
-                playerDmg = randint(player.weapon.power[0], player.weapon.power[1]) - self.defence
+            defeat = False
+            while not defeat and not self.dead:
+                playerDmg = randint(player.weapon.power0, player.weapon.power1) - self.defence
                 if playerDmg > 0:
-                    self.hp = self.hp - playerDmg
+                    self.hp -= playerDmg
                 print("You do", playerDmg, "damage. The", self.name, "has", self.hp, "health left.")
                 if self.hp > 0:
-                    monsterDmg = randint(self.power[0], self.power[1]) - (player.armor.defence + player.shield.defence)
+                    monsteratk = randint(self.power0, self.power1)
+                    pd = player.armor.defence + player.shield.defence
+                    print("Monster attacks" + str(monsteratk) + ". Player defends " + str(pd))
+                    monsterDmg = monsteratk - pd
                     if monsterDmg > 0:
-                        player.health = player.health - monsterDmg
+                        player.health -= monsterDmg
                     print(self.name, "does", monsterDmg, "damage. You have", player.health, "health left.")
                 else:
                     self.dead = True
                     print("You have slain the", self.name, "with your", player.weapon.name, ", while wearing a",
-                          player.armor.name, " and defending yourself with a", player.shield.name, ".")
+                          player.armor.name, "\n and defending yourself with a", player.shield.name, ".")
                     player.fame = player.fame + self.level
                     print("Your heroic deed gained you", self.level, "fame. The name of", player.name, "is now at",
                           player.fame, "on the Bendrojh-Fimblston scale!")
                     return True
                 if player.health < 1:
+                    defeat = True
                     print("The", self.name, "has defeated you.")
                     player.death()
         else:
-            print("You got away this time...")
+            cowardice = 270 - self.level
+            if cowardice > 0:
+                player.fame -= cowardice
+                print("You flee from the " + self.name + ".")
+                print("Your reputation is marred by your cowardly action. You lose " + str(cowardice) + " fame.")
+                luck = randint(0,4)
+                if luck == 0:
+                    dmg = (randint(self.power0, self.power1) - player.armor.defence - player.shield.defence)
+                    if dmg > 0:
+                        player.health -= dmg
+                        print("The " + self.name + " takes the opportunity to attack. You lose " + str(dmg) + " health.")
+                        if player.health < 1:
+                            player.death()
 
 
 class Player:
@@ -108,43 +126,50 @@ class Player:
     armors = []
     shields = []
     foods = []
-    inventory = [weapons, armors, shields, foods]
+    fessence = 0
+    wessence = 0
+    eessence = 0
 
     def __init__(self):
         self.name = input("What is your name?: ") + " the " + randomAdj()
         self.weapon.name = "basic sword"
-        self.weapon.power = [10, 50]
+        self.weapon.power0 = 10
+        self.weapon.power1 = 50
         self.armor.defence = 10
         self.armor.name = "shirt"
         self.shield.name = "no shield"
         self.shield.defence = 0
+        self.weapons = []
+        self.armors = []
+        self.shields = []
+        self.foods = []
 
     def status(self):
         print('You have', self.health, 'hitpoints.')
         print('The name', self.name, 'has approximately', self.fame, 'fame on the Bendrojh-Fimblston scale.')
-        print('You are wielding a', self.weapon.name, self.weapon.power[0], "-", self.weapon.power[1])
+        print('You are wielding a', self.weapon.name, self.weapon.power0, "-", self.weapon.power1)
         print('You are wearing a', self.armor.name, self.armor.defence, 'and defending yourself with a',
               self.shield.name, self.shield.defence, ".")
 
     def chkinv(self):  # Check inventory
         list_weapons = ""
         for item in self.weapons:
-            list_weapons = list_weapons + item.name + ", "
+            list_weapons = list_weapons + item.name + "(" + str(item.power0) + "," + str(item.power1) + "), "
         list_weapons = list_weapons[:-2] + "."
         print('weapons: ', list_weapons)
         list_armors = ""
         for item in self.armors:
-            list_armors = list_armors + item.name + ", "
+            list_armors = list_armors + item.name + "(" + str(item.defence) + "), "
         list_armors = list_armors[:-2] + "."
         print('armors: ', list_armors)
         list_shields = ""
         for item in self.shields:
-            list_shields = list_shields + item.name + ", "
+            list_shields = list_shields + item.name + "(" + str(item.defence) + "), "
         list_shields = list_shields[:-2] + "."
         print('shields: ', list_shields)
         list_foods = ""
         for item in self.foods:
-            list_foods = list_foods + item.name + ", "
+            list_foods = list_foods + item.name + "(" + str(item.hp) + "), "
         list_foods = list_foods[:-2] + "."
         print('foods: ', list_foods)
 
@@ -173,10 +198,10 @@ class Player:
             if spec == "all" or spec == "weapon":
                 best = self.weapon
                 for w in self.weapons:
-                    if ((w.power[0] + w.power[1])/2) > ((best.power[0] + best.power[1])/2):
+                    if ((w.power0 + w.power1)/2) > ((best.power0 + best.power1)/2):
                         best = w
                 self.weapon = best
-                print('You have equipped the', self.weapon.name, self.weapon.power[0], '-', self.weapon.power[1],
+                print('You have equipped the', self.weapon.name, self.weapon.power0, '-', self.weapon.power1,
                       "as a weapon.")
             if spec == "all" or spec == "armor":
                 best = self.armor
@@ -207,7 +232,59 @@ class Player:
             print("You equip the " + item.name + " as your " + item.itemtype + ".")
 
     def magic(self):
-        print("not implemented")
+        print("You have " + str(self.fessence) + " fire essence, " + str(self.wessence) + " water essence, and " +
+              str(self.eessence) + " earth essence.")
+        choice = input("Extract essence or cast spell? e/s : ")
+        if choice == "e":
+            extract = input("What do you extract the essence from? For all except equipped, say 'all'. : ")
+            if extract == 'all':
+                fe = 0
+                we = 0
+                ee = 0
+                for w in self.weapons:
+                    if w.name != self.weapon.name:
+                        fe += ((w.power0 + w.power1)*0.1)
+                self.weapons = [self.weapon]
+                for a in self.armors:
+                    if a.name != self.armor.name:
+                        we += (a.defence * 0.1)
+                self.armors = [self.armor]
+                for s in self.shields:
+                    if s.name != self.armor.name:
+                        ee += (s.defence * 0.1)
+                self.shields = [self.shield]
+                self.fessence += fe
+                self.wessence += we
+                self.eessence += ee
+                print("You extract from all the items you are not using and obtain " + str(fe) + " fire essence, " +
+                      str(we) + " water essence, and " + str(ee) + " earth essence.")
+        elif choice == "s":
+            cast = input("Cast: fire (f), water (w), or earth (e)? : ")
+            if cast == "fire" or cast == "f":
+                target = input("Warmth blooms within you. Focus on your weapon? y/n: ")
+                if target == "y":
+                    percentage = randint(1,99)
+                    a0 = self.fessence * (percentage/100)
+                    a1 = self.fessence - a0
+                    self.weapon.power0 += a0
+                    self.weapon.power1 += a1
+                    self.fessence = 0
+                    print("You channel the fire essence into your " + self.weapon.name + ", increasing its power by ("
+                          + str(a0) + ", " + str(a1) + ").")
+            elif cast == "water" or cast == "w":
+                target = input("A surge of power flows through you. Focus on your armor? y/n: ")
+                if target == "y":
+                    self.armor.defence += self.wessence
+                    print("You channel the water essence into your " + self.armor.name + ", increasing its defence by "
+                          + str(self.wessence) + ".")
+                    self.wessence = 0
+            elif cast == "earth" or cast == "e":
+                target = input("A great power weighs on you. Focus on your shield? y/n: ")
+                if target == "y":
+                    self.shield.defence += self.eessence
+                    print("You channel the earth essence into your " + self.shield.name + " increasing its defence by "
+                          + str(self.eessence) + ".")
+                    self.eessence = 0
 
     def eat(self):
         target = input("What do you want to eat? Or say 'all'. : ")
@@ -215,16 +292,17 @@ class Player:
             sumhp = 0
             for food in self.foods:
                 sumhp = sumhp + food.hp
-                self.foods.pop(food)
+            self.foods = []
             self.health = self.health + sumhp
+            print("You eat all the food you have and regain " + str(sumhp) + " health.")
         else:
             food = self.haveitem(target)
             if not food:
                 return False
             else:
                 self.health = self.health + food.hp
-                self.foods.pop(food)
-                print("You eat the " + food.name + " and regain " + food.hp + " health.")
+                self.foods.pop(self.foods.index(food))
+                print("You eat the " + food.name + " and regain " + str(food.hp) + " health.")
 
     def death(self):  # In event you are defeated in battle, checks for food in backpack, else game over
         totfood = 0
@@ -275,6 +353,8 @@ class Quest(NPC):
                   '), and health (', boss.hp, ').')
             if boss.fight(player):
                 print("The " + self.descriptor + " thanks you for your heroism and hurries away.")
+        else:
+            print("I don't blame you, kid. I turned and ran myself!")
 
 
 class Wizard(NPC):
@@ -282,7 +362,7 @@ class Wizard(NPC):
         super().__init__()
 
     def greet(self, player):
-        if player.fame < 500:
+        if player.fame < 750:
             print('Greetings stranger. You must be new to these parts, I have not heard tell of your adventures.')
             print('I am here to teach great heroes the ancient magic.')
             print("That way when they emerge from Donegeon, I can take partial credit for all their great deeds! HEHEHE!")
@@ -301,3 +381,5 @@ class Wizard(NPC):
                 print("The essence becomes a " + randomAdj() + " fireball, which explodes against the far wall.")
                 print("You're pretty sure you figured out how it was done.")
                 player.wizard = True
+            else:
+                print("'Very well. Return when you are ready to learn.")
