@@ -19,7 +19,7 @@ def event():
         if open_it == 'y':
             npc.greet(player)
         else:
-            print("You avoid the" + npc.descriptor + "'s friendly smile, and leave the room quickly.")
+            print("You avoid the " + npc.descriptor + "'s friendly smile, and leave the room quickly.")
     else:
         if what == 0 or what == 4:
             open_it = input('Here is a chest! Open it? y/n: ')
@@ -64,6 +64,8 @@ def event():
             print("You got confused and ran away.")
 
 
+corpses = []
+
 while True:
     print('Options (shortcuts):')
     start = input("play (p), highscores (h), settings (s), quit (q)? : ")
@@ -88,13 +90,17 @@ while True:
             elif action == 'eat':
                 player.eat()
             elif action == 'continue' or action == 'c':
+                player.rooms_cleared += 1
                 event()
             else:
                     print('Invalid entry.')
+        corpses.append(player)
     elif start == "highscores" or start == "h":
-        print("Can't do that yet.")
+        for corpse in corpses:
+            print(corpse.name + " achieved " + str(corpse.fame) + " fame, while traversing " + str(corpse.rooms_cleared)
+                  + " rooms of the Donegeon.")
     elif start == "settings" or start == "s":
-        print("Can't do that yet.")
+        print("There are no settings.")
     elif start == "quit" or start == "q":
         break
     else:

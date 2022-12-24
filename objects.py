@@ -79,7 +79,6 @@ class Monster(Item):
                 if self.hp > 0:
                     monsteratk = randint(self.power0, self.power1)
                     pd = player.armor.defence + player.shield.defence
-                    print("Monster attacks" + str(monsteratk) + ". Player defends " + str(pd))
                     monsterDmg = monsteratk - pd
                     if monsterDmg > 0:
                         player.health -= monsterDmg
@@ -129,6 +128,7 @@ class Player:
     fessence = 0
     wessence = 0
     eessence = 0
+    rooms_cleared = 0
 
     def __init__(self):
         self.name = input("What is your name?: ") + " the " + randomAdj()
@@ -253,11 +253,32 @@ class Player:
                     if s.name != self.armor.name:
                         ee += (s.defence * 0.1)
                 self.shields = [self.shield]
-                self.fessence += fe
-                self.wessence += we
-                self.eessence += ee
-                print("You extract from all the items you are not using and obtain " + str(fe) + " fire essence, " +
-                      str(we) + " water essence, and " + str(ee) + " earth essence.")
+                self.fessence += int(fe)
+                self.wessence += int(we)
+                self.eessence += int(ee)
+                print("You extract from all the items you are not using and obtain " + str(int(fe)) + " fire essence, " +
+                      str(int(we)) + " water essence, and " + str(int(ee)) + " earth essence.")
+            else:
+                extarget = self.haveitem(extract)
+                if not extarget:
+                    return False
+                else:
+                    if extarget.itemtype == "weapon":
+                        fe = int((extarget.power0 + extarget.power1)*0.1)
+                        self.fessence += fe
+                        print("You extract from the " + extarget.name + " and obtain " + str(fe) + " fire essence.")
+                        self.weapons.pop(self.weapons.index(extarget))
+                    elif extarget.itemtype == "armor":
+                        we = int(extarget.defence*0.1)
+                        self.wessence += we
+                        print("You extract from the " + extarget.name + " and obtain " + str(we) + " water essence.")
+                        self.armors.pop(self.armors.index(extarget))
+                    elif extarget.itemtype == "shield":
+                        ee = int(extarget.defence*0.1)
+                        self.eessence += ee
+                        print("You extract from the " + extarget.name + " and obtain " + str(ee) + " earth essence.")
+                        self.shields.pop(self.shields.index(extarget))
+
         elif choice == "s":
             cast = input("Cast: fire (f), water (w), or earth (e)? : ")
             if cast == "fire" or cast == "f":
@@ -316,6 +337,7 @@ class Player:
                   '. ')
             print('The name of ', self.name, ' had ', self.fame, ' fame on the Bendrojh-Fimblston scale.')
             print('Game Over.')
+
 
 
 class NPC:
